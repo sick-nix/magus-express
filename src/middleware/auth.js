@@ -6,8 +6,8 @@ async function checkAuth(req, res, next) {
 
     let user
     try {
-        const { id } = jwt.verify(token, env.ACCESS_TOKEN_SECRET)
-        user = await User.findById(id)
+        const { _id } = jwt.verify(token, env.ACCESS_TOKEN_SECRET)
+        user = await User.findById(_id)
         if(!user)
             return res.status(403).send()
     } catch (err) {

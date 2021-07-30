@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const { checkAuth } = require('../middleware/auth')
+const _ = require('lodash')
 
 async function hashPassword(req, res, next) {
     const { password } = req.body
@@ -38,7 +39,7 @@ async function findUser(req, res, next) {
 
 router.get('/', checkAuth, (req, res) => {
     const {user} = req.body
-    res.status(200).send({id: user.id, username: user.username})
+    res.status(200).send(_.omit(user.toObject(), ['password']))
 })
 
 // register route
@@ -61,11 +62,11 @@ router.post('/register', hashPassword, async (req, res) => {
 // login route
 router.post('/login', findUser, async (req, res) => {
     const { user } = req
-    const accessToken = jwt.sign({ id: user.id }, env.ACCESS_TOKEN_SECRET, {
+    const accessToken = jwt.sign({ _id: user._id }, env.ACCESS_TOKEN_SECRET, {
         expiresIn: 60 * 60 * 24 * 7 // one week
     })
     res.cookie('magus', accessToken, {httpOnly: true, sameSite: true})
-    res.status(201).send({ id: user.id, username: user.username })
+    res.status(200).send(_.omit(user.toObject(), ['password']))
 })
 
 router.delete('/logout', (req, res) => {
