@@ -38,7 +38,7 @@ async function findUser(req, res, next) {
 }
 
 router.get('/', checkAuth, (req, res) => {
-    const {user} = req.body
+    const {user} = req
     res.status(200).send(_.omit(user.toObject(), ['password']))
 })
 
@@ -65,7 +65,8 @@ router.post('/login', findUser, async (req, res) => {
     const accessToken = jwt.sign({ _id: user._id }, env.ACCESS_TOKEN_SECRET, {
         expiresIn: 60 * 60 * 24 * 7 // one week
     })
-    res.cookie('magus', accessToken, {httpOnly: true, sameSite: true})
+    // @todo restore
+    res.cookie('magus', accessToken, {})//{httpOnly: true, sameSite: true})
     res.status(200).send(_.omit(user.toObject(), ['password']))
 })
 

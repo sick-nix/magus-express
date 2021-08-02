@@ -2,6 +2,7 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
 const initRoutes = require('./routes')
+const initWs = require('./ws')
 const cors = require('cors')
 
 module.exports = async function (app) {
@@ -11,7 +12,9 @@ module.exports = async function (app) {
     app.use(cookieParser())
 
     app.use(cors({
-        origin: '*',
+        // @todo restore
+        //origin: '*',
+        origin: 'http://localhost:8080',
         credentials: true,
     }))
 
@@ -27,4 +30,5 @@ module.exports = async function (app) {
     })
 
     initRoutes(app)
+    initWs(app)
 }

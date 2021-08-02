@@ -3,6 +3,7 @@ class Magus {
     static _instance = null
     _rootPath = null
     _baseUrl = null
+    _wsEndpoint = null
 
     /**
      * @returns {Magus}
@@ -48,6 +49,24 @@ class Magus {
 
     getBaseUrl() {
         return this._baseUrl
+    }
+
+    /**
+     * @param {Object} params
+     * @param {string} params.protocol
+     * @param {string} params.host
+     * @returns {Magus}
+     */
+    setWsEndpoint(params = {}) {
+        let { protocol, host } = params
+        protocol = protocol === 'https' ? 'wss' : 'ws'
+        host = host.replace(/:\d+/,'')
+        this._wsEndpoint = protocol + '://' + host + ':' +  env.WS_PORT
+        return this
+    }
+
+    getWsEndpoint() {
+        return this._wsEndpoint
     }
 }
 
