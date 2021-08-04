@@ -1,3 +1,8 @@
+const Message = require('./Message')
+const RoomHelper = require('../util/helper/Room')
+const RoomUser = require('../models/RoomUser')
+const User = require('../models/User')
+
 class Container {
     /**
      * @type {null|Container}
@@ -19,17 +24,65 @@ class Container {
     }
 
     /**
-     * @param {string} user
-     * @param  connection
+     * @return {Object}
+     */
+    getConnections() {
+        return this._connections
+    }
+
+    /**
+     * @param {string|RoomUser|User} user
+     * @param {WebSocket} connection
      * @return {Container}
      */
     addConnectionByUser(user, connection) {
         if(!user) throw new Error('User not set ')
         if(!connection) throw new Error('Connection not set')
-        if (!this._connections[user]) this._connections[user] = []
+        const userId = RoomHelper._getUserId(user)
+        if (!this._connections[userId]) this._connections[userId] = []
 
-        this._connections[user].push(connection)
+        this._connections[userId].push(connection)
         return this
+    }
+
+    /**
+     * @param {string|RoomUser|User} user
+     * @return {Array}
+     */
+    getConnectionsByUser(user) {
+        const userId = RoomHelper._getUserId(user)
+        return this.getConnections()[userId]
+    }
+
+    /**
+     * @param {Message|string} message
+     * @param {Array} users
+     * @return {Container}
+     */
+    sendToUsers(message, users) {
+        let userId = null
+        for(const user of users) {
+            userId = RoomHelper._getUserId(user)
+
+            const connections = this.getConnectionsByUser(userId)
+            if(connections && connections.length) {
+                for(const conn of connections) {
+                    conn.send(this._getJsonMessage(message))
+                }
+            }
+        }
+
+        return this
+    }
+
+    /**
+     * @param {string|Message} message
+     * @return {string}
+     * @private
+     */
+    _getJsonMessage(message) {
+        if(message instanceof Message) return message.toString()
+        return message
     }
 }
 

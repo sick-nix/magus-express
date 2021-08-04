@@ -1,6 +1,17 @@
 const HandlerAbstract = require("./Handler/Abstract")
+const HandlerMap = require("./Handler/Map")
 
 class Handler {
+    static _instance = null
+
+    /**
+     * @return {null|Handler}
+     */
+    static get instance() {
+        if(!Handler._instance) Handler._instance = new Handler()
+        return Handler._instance
+    }
+
     /**
      * @param {Message} msg
      */
@@ -29,9 +40,7 @@ class Handler {
     }
 
     _getHandlerMap() {
-        return {
-
-        }
+        return HandlerMap
     }
 }
 

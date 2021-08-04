@@ -1,4 +1,5 @@
 const _ = require('lodash')
+const Dispatcher = require('../Dispatcher')
 
 class HandlerAbstract {
     _beforeRun = []
@@ -48,6 +49,13 @@ class HandlerAbstract {
         }
 
         return executed
+    }
+
+    /**
+     * @return {Dispatcher}
+     */
+    getDispatcher() {
+        return Dispatcher.instance
     }
 }
 

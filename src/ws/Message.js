@@ -1,4 +1,5 @@
 const MagusObject = require("../util/class/Magus/Object")
+const WebSocket = require('ws')
 
 class Message extends MagusObject {
     /**
@@ -11,6 +12,12 @@ class Message extends MagusObject {
      * @private
      */
     _meta = null
+
+    /**
+     * @type {null|WebSocket}
+     * @private
+     */
+    _connection = null
 
     /**
      * @returns {Message}
@@ -55,6 +62,22 @@ class Message extends MagusObject {
      */
     getMeta() {
         return this._meta
+    }
+
+    /**
+     * @return {null|WebSocket}
+     */
+    getConnection() {
+        return this._connection
+    }
+
+    /**
+     * @param ws
+     * @return {Message}
+     */
+    setConnection(ws) {
+        this._connection = ws
+        return this
     }
 
     /**
