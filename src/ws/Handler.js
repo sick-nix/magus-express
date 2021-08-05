@@ -1,46 +1,35 @@
-const HandlerAbstract = require("./Handler/Abstract")
-const HandlerMap = require("./Handler/Map")
+const HandlerAbstract = require('./Handler/Abstract')
+const Manager = require('./Manager')
+const _ = require('lodash')
 
-class Handler {
-    static _instance = null
-
-    /**
-     * @return {null|Handler}
-     */
-    static get instance() {
-        if(!Handler._instance) Handler._instance = new Handler()
-        return Handler._instance
-    }
+class Handler extends Manager {
+    static MANAGER_NAME = 'Handler'
 
     /**
      * @param {Message} msg
+     * @return {Handler}
      */
-    handle(msg) {
-        if(!msg.getType()) return this
-        let msgHandler = this.getMessageHandler(msg.getType())
-        if(msgHandler) {
-            msgHandler = new msgHandler(msg)
+    async handle(msg) {
+        const { instance, method } = await this.manage(msg)
 
-            if(msgHandler instanceof HandlerAbstract) {
-                if(msgHandler.executeBeforeRun())
-                    msgHandler.run()
-            }
-        }
+        if(!instance instanceof HandlerAbstract)
+            throw new Error(`Message handler has to be instance of HandlerAbstract, instead ${instance.constructor} passed`)
+        if(!_.isFunction(instance[method]))
+            throw new Error(`Method ${method} doesn't exist in class ${instance.constructor}`)
+
+        if(this.executeBeforeRun(instance, msg))
+            instance[method]()
+
+        return this
     }
 
     /**
-     * @param {string} type
-     * @returns {null|*}
+     * @param {HandlerAbstract} instance
+     * @param {Message} msg
+     * @return {boolean}
      */
-    getMessageHandler(type) {
-        if(!type) return null
-        const msgHandler = this._getHandlerMap()[type]
-        if(msgHandler) return msgHandler
-        return null
-    }
-
-    _getHandlerMap() {
-        return HandlerMap
+    executeBeforeRun(instance, msg) {
+        return instance._beforeRun.every(filter => filter.bind(instance)())
     }
 }
 

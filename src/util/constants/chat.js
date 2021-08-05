@@ -5,9 +5,11 @@ module.exports.CHAT_USER_ROLES = {
 }
 
 module.exports.MESSAGE_HANDLERS = {
-    ROOM_NEW: 'room.new'
+    ROOM_NEW: 'room.new',
+    ROOM_GET: 'room.get'
 }
 
 module.exports.MESSAGE_DISPATCHERS = {
-    ROOM_NEW: 'room.new'
+    ROOM_NEW: 'room.new',
+    ROOM_GET: 'room.get'
 }

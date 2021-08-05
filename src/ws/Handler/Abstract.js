@@ -1,4 +1,3 @@
-const _ = require('lodash')
 const Dispatcher = require('../Dispatcher')
 
 class HandlerAbstract {
@@ -32,23 +31,6 @@ class HandlerAbstract {
      */
     getMessage() {
         return this._message
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    executeBeforeRun() {
-        let executed = true
-        if(this._beforeRun && Array.isArray(this._beforeRun)) {
-            if(this._beforeRun.length) {
-                executed = this._beforeRun.every(filter => {
-                    if (_.isFunction(filter)) return (filter.bind(this))()
-                    return false
-                })
-            }
-        }
-
-        return executed
     }
 
     /**

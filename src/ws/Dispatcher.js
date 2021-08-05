@@ -1,46 +1,28 @@
-const DispatcherAbstract = require("./Dispatcher/Abstract")
-const DispatcherMap = require("./Dispatcher/Map")
+const Manager = require('./Manager')
+const Message = require('./Message')
+const DispatcherAbstract = require('./Dispatcher/Abstract')
+const _ = require('lodash')
 
-class Dispatcher {
-    static _instance = null
-
-    /**
-     * @return {null|Handler}
-     */
-    static get instance() {
-        if(!Dispatcher._instance) Dispatcher._instance = new Dispatcher()
-        return Dispatcher._instance
-    }
+class Dispatcher extends Manager {
+    static MANAGER_NAME = 'Dispatcher'
 
     /**
      * @param {string} type
      * @param {Message} message
      * @param {Array} args
      */
-    dispatch(type, message, args) {
-        let msgDispatcher = this.getMessageDispatcher(type)
-        if(msgDispatcher) {
-            msgDispatcher = new msgDispatcher(message)
+    async dispatch(type, message, args) {
+        const { instance, method } = await this.manage(new Message({type}))
+        instance.setMessage(message)
 
-            if(msgDispatcher instanceof DispatcherAbstract) {
-                msgDispatcher.run(...args)
-            }
-        }
-    }
+        if(!instance instanceof DispatcherAbstract)
+            throw new Error(`Message dispatcher has to be instance of DispatcherAbstract, instead ${instance.constructor} passed`)
+        if(!_.isFunction(instance[method]))
+            throw new Error(`Method ${method} doesn't exist in class ${instance.constructor}`)
 
-    /**
-     * @param {string} type
-     * @returns {null|*}
-     */
-    getMessageDispatcher(type) {
-        if(!type) return null
-        const msgDispatcher = this._getDispatchMap()[type]
-        if(msgDispatcher) return msgDispatcher
-        return null
-    }
+        instance[method](...args)
 
-    _getDispatchMap() {
-        return DispatcherMap
+        return this
     }
 }
 

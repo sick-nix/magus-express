@@ -1,6 +1,7 @@
 const Room = require('../../models/Room')
 const RoomUser = require('../../models/RoomUser')
 const User = require('../../models/User')
+const DbHelper = require('../db')
 
 const RoomHelper = {
     /**
@@ -13,7 +14,8 @@ const RoomHelper = {
             roomId = room._id
 
         try {
-            const users = await RoomUser.find({ room: roomId })
+            const usersByRoom = DbHelper.getArrayOfField(await RoomUser.find({ room: roomId }), 'user')
+            const users = await User.find({ _id: { '$in': usersByRoom}})
             if(users) return users
         } catch (err) {
             console.error(err)
@@ -26,10 +28,19 @@ const RoomHelper = {
         if(!userId) return []
 
         try {
-            const roomIds = await RoomUser.find({user: userId}).distinct('room')
-            if(roomIds) {
-                return await Room.find({'_id': {'$in': roomIds}})
-            }
+            const roomIds = DbHelper.getArrayOfField(await RoomUser.find({user: userId}), 'room')
+            let rooms = await Room.find({'_id': {'$in': roomIds}})
+            if(!rooms) return []
+
+            rooms = await Promise.all(rooms.map(async room => {
+                const users = DbHelper.getArrayOfField(await RoomUser.find({room: room._id}))
+                return {
+                    ...room.toObject(),
+                    users
+                }
+            }))
+
+            return rooms
         } catch (err) {
             console.error(err)
         }
