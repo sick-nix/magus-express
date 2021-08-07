@@ -1,10 +1,15 @@
 const mongoose = require('mongoose')
+const {ROOM_TYPES} = require("../constants/chat")
 
 const roomUserSchema = new mongoose.Schema({
     room: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Room'
+    },
+    room_type: {
+        type: String,
+        default: ROOM_TYPES.CHANNEL
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

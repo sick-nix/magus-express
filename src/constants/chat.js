@@ -13,3 +13,8 @@ module.exports.MESSAGE_DISPATCHERS = {
     ROOM_NEW: 'room.new',
     ROOM_GET: 'room.get'
 }
+
+module.exports.ROOM_TYPES = {
+    CHANNEL: 'channel',
+    DIRECT: 'direct'
+}

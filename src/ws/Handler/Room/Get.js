@@ -1,5 +1,5 @@
 const HandlerAbstract = require('../Abstract')
-const {MESSAGE_DISPATCHERS} = require("../../../util/constants/chat")
+const {MESSAGE_DISPATCHERS} = require("../../../constants/chat")
 
 class RoomGet extends HandlerAbstract {
     async run() {
