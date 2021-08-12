@@ -59,9 +59,12 @@ class Container {
      * @param {Array} users
      * @return {Container}
      */
-    sendToUsers(message, users) {
+    async sendToUsers(message, users) {
         let userId = null
         for(const user of users) {
+            message.getMeta().addData({
+                'lastMessageCount': await RoomHelper.getUserLastMessageCount(user)
+            })
             userId = RoomHelper._getUserId(user)
 
             const connections = this.getConnectionsByUser(userId)

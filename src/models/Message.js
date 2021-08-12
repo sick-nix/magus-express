@@ -9,6 +9,10 @@ const messageSchema = new mongoose.Schema({
         required: true,
         ref: 'Room'
     },
+    private: {
+        type: Boolean,
+        default: false
+    },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

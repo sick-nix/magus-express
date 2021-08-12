@@ -18,6 +18,18 @@ const roomUserSchema = new mongoose.Schema({
     },
     role: {
         type: String
+    },
+    hidden: {
+        type: Boolean,
+        default: false
+    },
+    lastMessageCount: {
+        type: Number,
+        default: 0
+    },
+    activeInRoom: {
+        type: Boolean,
+        default: false
     }
 })
 

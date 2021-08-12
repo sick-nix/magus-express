@@ -21,6 +21,10 @@ const roomSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
+    },
+    messageCount: {
+        type: Number,
+        default: 0
     }
 })
 

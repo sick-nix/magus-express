@@ -12,24 +12,23 @@ class RoomNew extends DispatcherAbstract {
             if(room instanceof Room) room = room.toObject()
             // if room is of type direct, only send room to user that created the room
             let users = await RoomHelper.getUsersByRoom(room)
+            let usersToSendMessageTo = users
             if(room.type === ROOM_TYPES.DIRECT) {
                 const otherUser = users.find(user => user._id !== this.getMessage().getConnection().currentUser._id)
                 if(otherUser)
                     room.name = otherUser.username
-                users = [ this.getMessage().getConnection().currentUser ]
+                usersToSendMessageTo = [ this.getMessage().getConnection().currentUser ]
             }
-
-            const userIds = DbHelper.getArrayOfField(users)
 
             const msg = new Message({
                 type: MESSAGE_DISPATCHERS.ROOM_NEW,
                 data: {
                     ...room,
-                    users: userIds
+                    users
                 }
             })
 
-            this.getContainer().sendToUsers(msg, users)
+            this.getContainer().sendToUsers(msg, usersToSendMessageTo)
         } catch (err) {
             console.error(err)
         }

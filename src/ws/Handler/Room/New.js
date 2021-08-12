@@ -3,6 +3,8 @@ const Room = require('../../../models/Room')
 const RoomUser = require('../../../models/RoomUser')
 const {CHAT_USER_ROLES, MESSAGE_DISPATCHERS} = require("../../../constants/chat")
 const _ = require('lodash')
+const {ROOM_TYPES} = require("../../../constants/chat")
+const RoomHelper = require('../../../util/helper/Room')
 
 class RoomNew extends HandlerAbstract {
     async run() {
@@ -10,23 +12,37 @@ class RoomNew extends HandlerAbstract {
 
         if(_.isString(users)) users = [ users ]
 
-        const newRoom = new Room({name, type, ownerUser: this.getMessage().getConnection().currentUser._id})
+        const existingRoom = await RoomHelper.getDirectRoomByUserPair([
+            ...users,
+            this.getMessage().getConnection().currentUser
+        ])
+
+        // @todo if room is direct check if room for those two users already exists
+
+        let newRoom = existingRoom
         try {
-            await newRoom.save()
-            for(const user of users) {
+            if(!existingRoom) {
+                newRoom = new Room({name, type, ownerUser: this.getMessage().getConnection().currentUser._id})
+                let hidden = false
+                if (type === ROOM_TYPES.DIRECT)
+                    hidden = true
+                await newRoom.save()
+                for (const user of users) {
+                    await (new RoomUser({
+                        user,
+                        hidden,
+                        room: newRoom.id,
+                        role: CHAT_USER_ROLES.USER,
+                        room_type: type
+                    })).save()
+                }
                 await (new RoomUser({
-                    user,
+                    user: this.getMessage().getConnection().currentUser._id,
                     room: newRoom.id,
-                    role: CHAT_USER_ROLES.USER,
+                    role: CHAT_USER_ROLES.OWNER,
                     room_type: type
                 })).save()
             }
-            await (new RoomUser({
-                user: this.getMessage().getConnection().currentUser._id,
-                room: newRoom.id,
-                role: CHAT_USER_ROLES.OWNER,
-                room_type: type
-            })).save()
 
             await this.getDispatcher().dispatch(MESSAGE_DISPATCHERS.ROOM_NEW, this.getMessage(), [newRoom])
         } catch (err) {

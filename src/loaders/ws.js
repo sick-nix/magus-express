@@ -5,6 +5,7 @@ const Container = require('../ws/Container')
 const Handler = require('../ws/Handler')
 const Message = require('../ws/Message')
 const _ = require('lodash')
+const RoomHelper = require('../util/helper/Room')
 
 module.exports = function (app) {
     const wss = new Server({
@@ -24,7 +25,10 @@ module.exports = function (app) {
             const msg = new Message(JSON.parse(message))
             msg.setConnection(ws)
             Handler.instance.handle(msg)
-            // @todo handle ws message
+        })
+
+        ws.on('close', async function () {
+            await RoomHelper.setUserInactiveInRooms(ws.currentUser)
         })
     })
 }
