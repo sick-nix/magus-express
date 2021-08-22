@@ -99,6 +99,7 @@ const RoomHelper = {
     async setUserActiveInRoom(room, user, activeInRoom) {
         const relation = await this.getRoomUserRelation(room, user)
         relation.activeInRoom = activeInRoom
+        relation.lastMessageCount = room.messageCount
         try {
             await relation.save()
             return true
@@ -118,7 +119,7 @@ const RoomHelper = {
     /**
      * @param {Room} room
      * @param {User} user
-     * @return {User}
+     * @return {RoomUser}
      */
     getRoomUserRelation(room, user) {
         return RoomUser.findOne({room: room._id, user: user._id})
@@ -153,6 +154,67 @@ const RoomHelper = {
 
         room = await Room.findById(room)
         return room
+    },
+    /**
+     * @param {Room|Object} room
+     * @param {Object} params
+     * @return {Promise<RoomHelper>}
+     */
+    async prepareRoom(room, params = {}) {
+        const { currentUser } = params
+        if(room.type === ROOM_TYPES.DIRECT) {
+            const users = await this.getUsersByRoom(room)
+            const otherUser = users.find(user => user._id.toString() !== currentUser._id.toString())
+            const relation = await this.getRoomUserRelation(room, currentUser)
+            if(otherUser)
+                room.name = otherUser.username
+            if(relation)
+                room.hidden = relation.hidden
+        }
+
+        return this
+    },
+    /**
+     * @param {Room|Object} room
+     * @param {User|Object} user
+     * @param {boolean} hidden
+     * @return {Promise<RoomHelper>}
+     */
+    async setHiddenForRelation(room, user, hidden = false) {
+        const roomRelation = await this.getRoomUserRelation(room, user)
+        if(!roomRelation) return this
+
+        try {
+            roomRelation.hidden = hidden
+            if(hidden)
+                roomRelation.activeInRoom = false
+            await roomRelation.save()
+        } catch (err) {
+            console.log(err)
+        }
+
+        return this
+    },
+    /**
+     * @param {Room|Object} room
+     * @return {Promise<{users: *[], room}>}
+     */
+    async deleteRoom(room) {
+        let users = []
+        try {
+            users = await this.getUsersByRoom(room)
+            await RoomUser.deleteMany({
+                room: room._id
+            })
+            await Room.deleteOne({ _id: mongoose.Types.ObjectId(room._id) })
+        } catch (err) {
+            console.error(err)
+        }
+
+        return {
+            users,
+            room
+        }
     }
 }
 

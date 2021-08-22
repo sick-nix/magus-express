@@ -17,7 +17,9 @@ class RoomNew extends HandlerAbstract {
             this.getMessage().getConnection().currentUser
         ])
 
-        // @todo if room is direct check if room for those two users already exists
+        if(existingRoom) {
+            await RoomHelper.setHiddenForRelation(existingRoom, this.getMessage().getConnection().currentUser, false)
+        }
 
         let newRoom = existingRoom
         try {

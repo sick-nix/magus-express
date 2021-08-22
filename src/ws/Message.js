@@ -1,5 +1,4 @@
 const MagusObject = require("../util/class/Magus/Object")
-const WebSocket = require('ws')
 
 class Message extends MagusObject {
     /**
@@ -14,6 +13,12 @@ class Message extends MagusObject {
     _meta = null
 
     /**
+     * @type {null|ObjectId}
+     * @private
+     */
+    _fromUser = null
+
+    /**
      * @type {null|WebSocket}
      * @private
      */
@@ -25,9 +30,10 @@ class Message extends MagusObject {
     constructor(msg) {
         super()
 
-        const { type, data = {}, meta = {} } = msg
+        const { type, data = {}, meta = {}, fromUser } = msg
         this.setType(type).setData(data)
         this._setMeta(new MagusObject(meta))
+        this.setFromUser(fromUser)
         return this
     }
 
@@ -65,6 +71,22 @@ class Message extends MagusObject {
     }
 
     /**
+     * @param {ObjectId} fromUser
+     * @returns {Message}
+     */
+    setFromUser(fromUser) {
+        this._fromUser = fromUser
+        return this
+    }
+
+    /**
+     * @returns {null|ObjectId}
+     */
+    getFromUser() {
+        return this._fromUser
+    }
+
+    /**
      * @return {null|WebSocket}
      */
     getConnection() {
@@ -87,7 +109,8 @@ class Message extends MagusObject {
         return JSON.stringify({
             type: this.getType(),
             data: this.getData(),
-            meta: this.getMeta().getData()
+            meta: this.getMeta().getData(),
+            fromUser: this.getFromUser()
         })
     }
 }

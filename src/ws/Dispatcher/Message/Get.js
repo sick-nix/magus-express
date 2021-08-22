@@ -1,5 +1,4 @@
 const DispatcherAbstract = require('../Abstract')
-const Message = require('../../Message')
 const {MESSAGE_DISPATCHERS} = require("../../../constants/chat")
 const DbHelper = require("../../../util/db")
 
@@ -9,7 +8,7 @@ class MessageGet extends DispatcherAbstract {
             let users = [ this.getMessage().getConnection().currentUser ]
             const userIds = DbHelper.getArrayOfField(users)
 
-            const msg = new Message({
+            const msg = this.createMessage({
                 type: MESSAGE_DISPATCHERS.MESSAGE_GET,
                 data: {
                     ...this.getMessage().getData(),

@@ -3,7 +3,7 @@ const router = express.Router()
 const User = require('../models/User')
 const { checkAuth } = require('../middleware/auth')
 
-router.get('/', checkAuth, async (req, res) => {
+router.get('/', async (req, res) => {
     const { email, username } = req.query
     const filter = {}
     if(email)

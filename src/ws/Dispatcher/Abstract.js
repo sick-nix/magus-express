@@ -1,4 +1,5 @@
 const Container = require('../Container')
+const Message = require('../Message')
 
 class DispatcherAbstract {
     _message = null
@@ -37,6 +38,29 @@ class DispatcherAbstract {
      */
     getContainer() {
         return Container.instance
+    }
+
+    /**
+     * @return {Dispatcher}
+     */
+    getDispatcher() {
+        const Dispatcher = require('../Dispatcher')
+        return Dispatcher.instance
+    }
+
+    /**
+     * @param {Object} data
+     * @param {Message|null} originalMessage
+     * @return {Message}
+     */
+    createMessage(data, originalMessage= null) {
+        if(!originalMessage)
+            originalMessage = this.getMessage()
+
+        return new Message({
+            ...data,
+            fromUser: originalMessage.getConnection().currentUser._id
+        })
     }
 }
 

@@ -6,6 +6,8 @@ const User = require('../models/User')
 const { checkAuth } = require('../middleware/auth')
 const _ = require('lodash')
 
+const sessionMaxAgeInSeconds = 60 * 60 * 24 * 7 // one week
+
 async function hashPassword(req, res, next) {
     const { password } = req.body
     if(!password) return res.status(401).send()
@@ -63,10 +65,13 @@ router.post('/register', hashPassword, async (req, res) => {
 router.post('/login', findUser, async (req, res) => {
     const { user } = req
     const accessToken = jwt.sign({ _id: user._id }, env.ACCESS_TOKEN_SECRET, {
-        expiresIn: 60 * 60 * 24 * 7 // one week
+        expiresIn: sessionMaxAgeInSeconds
     })
     // @todo restore
-    res.cookie('magus', accessToken, {})//{httpOnly: true, sameSite: true})
+    res.cookie('magus', accessToken, {
+        httpOnly: true,
+        //maxAge: sessionMaxAgeInSeconds * 1000,
+    })//{sameSite: true})
     res.status(200).send(_.omit(user.toObject(), ['password']))
 })
 

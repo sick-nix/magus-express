@@ -8,6 +8,8 @@ module.exports.MESSAGE_HANDLERS = {
     ROOM_NEW: 'room.new',
     ROOM_GET: 'room.get',
     ROOM_ENTER: 'room.enter',
+    ROOM_DELETE: 'room.delete',
+    ROOM_HIDE: 'room.hide',
     MESSAGE_NEW: 'message.new',
     MESSAGE_GET: 'message.get'
 }
@@ -16,6 +18,8 @@ module.exports.MESSAGE_DISPATCHERS = {
     ROOM_NEW: 'room.new',
     ROOM_GET: 'room.get',
     ROOM_ENTER: 'room.enter',
+    ROOM_DELETE: 'room.delete',
+    ROOM_HIDE: 'room.hide',
     MESSAGE_NEW: 'message.new',
     MESSAGE_GET: 'message.get'
 }

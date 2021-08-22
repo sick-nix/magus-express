@@ -3,8 +3,8 @@ const _ = require('lodash')
 class MagusObject {
     _data = null
 
-    constructor() {
-        this.setData({})
+    constructor(data = {}) {
+        this.setData(data)
 
         return new Proxy(this, this.getProxyHandler())
     }
