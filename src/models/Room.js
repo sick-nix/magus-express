@@ -29,7 +29,7 @@ const roomSchema = new mongoose.Schema({
 })
 
 roomSchema.pre('save', function (next) {
-    if(this._id) this.updatedAt = Date.now
+    if(this._id) this.updatedAt = Date.now()
     next()
 })
 

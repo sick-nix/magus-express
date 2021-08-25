@@ -11,7 +11,9 @@ module.exports.MESSAGE_HANDLERS = {
     ROOM_DELETE: 'room.delete',
     ROOM_HIDE: 'room.hide',
     MESSAGE_NEW: 'message.new',
-    MESSAGE_GET: 'message.get'
+    MESSAGE_GET: 'message.get',
+    MESSAGE_EDIT: 'message.edit',
+    MESSAGE_DELETE: 'message.delete'
 }
 
 module.exports.MESSAGE_DISPATCHERS = {
@@ -21,7 +23,9 @@ module.exports.MESSAGE_DISPATCHERS = {
     ROOM_DELETE: 'room.delete',
     ROOM_HIDE: 'room.hide',
     MESSAGE_NEW: 'message.new',
-    MESSAGE_GET: 'message.get'
+    MESSAGE_GET: 'message.get',
+    MESSAGE_EDIT: 'message.edit',
+    MESSAGE_DELETE: 'message.delete'
 }
 
 module.exports.ROOM_TYPES = {

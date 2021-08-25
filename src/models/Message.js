@@ -29,7 +29,7 @@ const messageSchema = new mongoose.Schema({
 })
 
 messageSchema.pre('save', function (next) {
-    if(this._id) this.updatedAt = Date.now
+    if(this._id) this.updatedAt = Date.now()
     next()
 })
 

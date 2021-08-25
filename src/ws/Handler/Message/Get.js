@@ -17,7 +17,7 @@ class MessageGet extends HandlerAbstract {
                     ]}
                 ]
             }
-            if(before) filter['_id'] = {'$lte': before}
+            if(before) filter['_id'] = {'$lt': before}
             // get last 50 messages from the end
             const messages = (await Message.find(filter).sort({'_id': -1}).limit(50))
             if(messages) messages.reverse()

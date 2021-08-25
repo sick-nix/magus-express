@@ -190,7 +190,7 @@ const RoomHelper = {
                 roomRelation.activeInRoom = false
             await roomRelation.save()
         } catch (err) {
-            console.log(err)
+            console.error(err)
         }
 
         return this
