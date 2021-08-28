@@ -3,6 +3,7 @@ const Room = require('../../../models/Room')
 const RoomUser = require('../../../models/RoomUser')
 const {MESSAGE_DISPATCHERS} = require("../../../constants/chat")
 const RoomHelper = require('../../../util/helper/Room')
+const MessageHelper = require('../../../util/helper/Message')
 const DbHelper = require("../../../util/db")
 const {ROOM_TYPES} = require("../../../constants/chat")
 
@@ -33,6 +34,8 @@ class MessageEdit extends DispatcherAbstract {
                 }
             }
             const userIds = DbHelper.getArrayOfField(users)
+
+            await MessageHelper.prepareMessage(message)
 
             // for each message set a from_user parameter
             const msg = this.createMessage({

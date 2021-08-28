@@ -7,4 +7,5 @@ exports.env = {
     DATABASE_URL: process.env.DATABASE_URL,
     SERVER_PORT: process.env.SERVER_PORT,
     WS_PORT: process.env.WS_PORT,
+    MAX_ATTACHMENT_SIZE: 1000 * 1000 * 20 // 20 MB
 }

@@ -1,7 +1,9 @@
+const path = require('path')
+
 class Magus {
     _dbConnection = null
     static _instance = null
-    _rootPath = null
+    _rootPath = ''
     _baseUrl = null
     _wsEndpoint = null
 
@@ -31,8 +33,8 @@ class Magus {
         return this._rootPath
     }
 
-    getDir(path) {
-        return this.getRootPath() + '/' + path.replace(/^\/*?/, '')
+    getDir(...dir) {
+        return path.join(this.getRootPath(), ...dir.map(d => d.replace(/^\/*?/, '')))
     }
 
     /**

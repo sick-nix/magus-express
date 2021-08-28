@@ -200,17 +200,15 @@ const RoomHelper = {
      * @return {Promise<{users: *[], room}>}
      */
     async deleteRoom(room) {
+        room = await Room.findById(mongoose.Types.ObjectId(room._id))
         let users = []
         try {
             users = await this.getUsersByRoom(room)
-            await RoomUser.deleteMany({
-                room: room._id
-            })
-            await Room.deleteOne({ _id: mongoose.Types.ObjectId(room._id) })
         } catch (err) {
             console.error(err)
         }
 
+        await room.deleteOne()
         return {
             users,
             room

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Attachment = require('./Attachment')
 
 const messageSchema = new mongoose.Schema({
     content: {
@@ -19,18 +20,29 @@ const messageSchema = new mongoose.Schema({
         ref: 'User'
     },
     createdAt: {
-        type: Date,
-        default: Date.now
+        type: Date
     },
     updatedAt: {
-        type: Date,
-        default: Date.now
+        type: Date
     }
 })
 
 messageSchema.pre('save', function (next) {
-    if(this._id) this.updatedAt = Date.now()
+    const now = Date.now()
+    if(!this.createdAt)
+        this.createdAt = now
+    this.updatedAt = now
     next()
+})
+
+messageSchema.post('deleteOne', { document: true, query: false },async function (next) {
+    const attachments = await Attachment.find({
+        message: this._id
+    })
+
+    for(const attachment of attachments) {
+        await attachment.deleteOne()
+    }
 })
 
 module.exports = mongoose.model('Message', messageSchema)
