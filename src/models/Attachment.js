@@ -34,10 +34,14 @@ const attachmentSchema = new mongoose.Schema({
 })
 
 attachmentSchema.post('deleteOne', { document: true, query: false }, function () {
-    const path = AttachmentHelper.getPath(this.filePath)
-    fs.unlink(path, err => {
-        if(err) console.error(err)
-    })
+    if(this.filePath) {
+        const path = AttachmentHelper.getPath(this.filePath)
+        if (fs.existsSync(path)) {
+            fs.unlink(path, err => {
+                if (err) console.error(err)
+            })
+        }
+    }
 })
 
 module.exports = mongoose.model('Attachment', attachmentSchema)

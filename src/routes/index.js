@@ -13,7 +13,8 @@ router.get('/', (req, res) => {
     'index.ejs', {
             config: {
                 baseUrl: Magus.instance.getBaseUrl(),
-                wsEndpoint: Magus.instance.getWsEndpoint()
+                wsEndpoint: Magus.instance.getWsEndpoint(),
+                maxAttachmentSize: env.MAX_ATTACHMENT_SIZE
             }
         }
     )

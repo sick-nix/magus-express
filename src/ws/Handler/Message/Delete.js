@@ -7,7 +7,9 @@ class MessageDelete extends HandlerAbstract {
         const message = this.getMessage().getData()
 
         try {
-            await (await Message.findById(message._id)).deleteOne()
+            const foundMessage = await Message.findById(message._id)
+            if(foundMessage)
+                await foundMessage.deleteOne()
             await this.getDispatcher().dispatch(
                 MESSAGE_DISPATCHERS.MESSAGE_DELETE,
                 this.getMessage(),
