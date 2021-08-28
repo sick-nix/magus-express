@@ -6,6 +6,7 @@ const initWs = require('./ws')
 const cors = require('cors')
 
 module.exports = async function (app) {
+    app.use(express.static(Magus.instance.getDir('../public')))
     // add json support
     app.use(express.json())
     // add cookie parser
