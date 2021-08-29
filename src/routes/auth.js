@@ -70,8 +70,9 @@ router.post('/login', findUser, async (req, res) => {
     // @todo restore
     res.cookie('magus', accessToken, {
         httpOnly: true,
-        //maxAge: sessionMaxAgeInSeconds * 1000,
-    })//{sameSite: true})
+        sameSite: true,
+        maxAge: sessionMaxAgeInSeconds * 1000,
+    })
     res.status(200).send(_.omit(user.toObject(), ['password']))
 })
 

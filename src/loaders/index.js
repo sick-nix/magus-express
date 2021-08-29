@@ -14,8 +14,8 @@ module.exports = async function (app) {
 
     app.use(cors({
         // @todo restore
-        //origin: '*',
-        origin: 'http://localhost:8080',
+        origin: '*',
+        //origin: 'http://localhost:8080',
         credentials: true,
     }))
 
