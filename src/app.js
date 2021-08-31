@@ -10,4 +10,4 @@ const app = express()
 
 init(app)
 
-app.listen(env.SERVER_PORT)
+app.listen(env.PORT)
