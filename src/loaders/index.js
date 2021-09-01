@@ -6,6 +6,7 @@ const initWs = require('./ws')
 const cors = require('cors')
 
 module.exports = async function (app) {
+    // without this express cannot detect heroku protocol as secure
     app.enable('trust proxy');
     app.use(express.static(Magus.instance.getDir('../public')))
     // add json support
