@@ -143,7 +143,7 @@ const RoomHelper = {
 
         let room = await RoomUser.aggregate([
             { $match: { room_type: ROOM_TYPES.DIRECT, user: { '$in': users } } },
-            { $group: { _id: '$room', total: { $count: {} } } },
+            { $group: { _id: '$room', total: { $sum: 1 } } },
             { $match: { total: 2 } }
         ])
 
