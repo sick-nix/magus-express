@@ -2,10 +2,16 @@ const HandlerAbstract = require('../Abstract')
 const Message = require('../../../models/Message')
 const Attachment = require('../../../models/Attachment')
 const {MESSAGE_DISPATCHERS} = require("../../../constants/chat")
+const Room = require("../../../models/Room")
+const RoomHelper = require("../../../util/helper/Room")
 
 class MessageNew extends HandlerAbstract {
     async run() {
         const { attachment, ...otherData } = this.getMessage().getData()
+
+        const room = await Room.findById(otherData.room)
+        await RoomHelper.setUserInactiveInRooms(this.getMessage().getConnection().currentUser)
+        await RoomHelper.setUserActiveInRoom(room, this.getMessage().getConnection().currentUser, true)
 
         const newMessage = new Message({
             ...otherData,
