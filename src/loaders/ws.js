@@ -13,6 +13,9 @@ module.exports = function (app) {
     })
 
     wss.on('connection', async function (ws, req) {
+        console.log({
+            test: req.headers.cookie
+        })
         if(!(req && req.headers && req.headers.cookie)) throw new Error('Cookies not set')
 
         const cookies = parseCookies(req.headers.cookie)
