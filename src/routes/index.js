@@ -7,7 +7,10 @@ router.get('/', (req, res) => {
         host: req.get('host')
     }
 
-    console.log(urlParams)
+    console.log({
+        ...urlParams,
+        secure: req.secure
+    })
     Magus.instance.setBaseUrl(urlParams)
     Magus.instance.setWsEndpoint(urlParams)
 
