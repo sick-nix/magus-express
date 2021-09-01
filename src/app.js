@@ -13,4 +13,4 @@ const server = http.createServer(app)
 app.server = server
 init(app)
 
-app.listen(env.PORT)
+app.server.listen(env.PORT)
