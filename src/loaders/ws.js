@@ -9,7 +9,7 @@ const RoomHelper = require('../util/helper/Room')
 
 module.exports = function (app) {
     const wss = new Server({
-        port: 9000
+        server: app
     })
 
     wss.on('connection', async function (ws, req) {

@@ -63,7 +63,7 @@ class Magus {
         let { protocol, host } = params
         protocol = protocol === 'https' ? 'wss' : 'ws'
         host = host.replace(/:\d+/,'')
-        this._wsEndpoint = protocol + '://' + host + ':' +  env.WS_PORT
+        this._wsEndpoint = protocol + '://' + host
         return this
     }
 
