@@ -12,10 +12,13 @@ class RoomNew extends HandlerAbstract {
 
         if(_.isString(users)) users = [ users ]
 
-        const existingRoom = await RoomHelper.getDirectRoomByUserPair([
-            ...users,
-            this.getMessage().getConnection().currentUser
-        ])
+        let existingRoom = null
+
+        if(type === ROOM_TYPES.DIRECT)
+            existingRoom = await RoomHelper.getDirectRoomByUserPair([
+                ...users,
+                this.getMessage().getConnection().currentUser
+            ])
 
         if(existingRoom) {
             await RoomHelper.setHiddenForRelation(existingRoom, this.getMessage().getConnection().currentUser, false)
