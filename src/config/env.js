@@ -6,6 +6,5 @@ exports.env = {
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     PORT: process.env.PORT,
-    WS_PORT: process.env.WS_PORT,
     MAX_ATTACHMENT_SIZE: 1024 * 1024 * 20 // 20 MB
 }
