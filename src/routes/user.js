@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
 const { checkAuth } = require('../middleware/auth')
+const _ = require('lodash')
 
 router.get('/', async (req, res) => {
     const { email, username } = req.query
@@ -24,7 +25,8 @@ router.get('/users', checkAuth, async (req, res) => {
     const filter = {username: new RegExp(username)}
     if(Boolean(excludeCurrentUser)) filter._id = { '$ne': user._id }
     try {
-        const users = await User.find(filter).limit(50)
+        let users = await User.find(filter).limit(50)
+        users = users.map(u => _.omit(u, ['password']))
         res.status(200).send(users)
     } catch (err) {
         res.status(500).send({ error: err.message })
