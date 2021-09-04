@@ -57,7 +57,8 @@ class Container {
         const userId = RoomHelper._getUserId(user)
         if (!this._connections[userId]) return this
 
-        this._connections[userId].splice(connection, -1)
+        const index = this._connections[userId].findIndex(connection)
+        this._connections[userId].splice(index, -1)
         return this
     }
 
