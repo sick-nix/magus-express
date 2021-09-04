@@ -46,12 +46,38 @@ class Container {
     }
 
     /**
+     *
+     * @param {string|RoomUser|User} user
+     * @param {WebSocket} connection
+     * @return {Container}
+     */
+    removeConnectionByUser(user, connection) {
+        if(!user) throw new Error('User not set ')
+        if(!connection) throw new Error('Connection not set')
+        const userId = RoomHelper._getUserId(user)
+        if (!this._connections[userId]) return this
+
+        this._connections[userId].splice(connection, -1)
+        return this
+    }
+
+    /**
      * @param {string|RoomUser|User} user
      * @return {Array}
      */
     getConnectionsByUser(user) {
         const userId = RoomHelper._getUserId(user)
         return this.getConnections()[userId]
+    }
+
+    /**
+     * @param {string|RoomUser|User} user
+     * @return {number}
+     */
+    getCountByUser(user) {
+        const userId = RoomHelper._getUserId(user)
+        if(userId && this._connections[userId]) return this._connections[userId].length
+        return 0
     }
 
     /**
