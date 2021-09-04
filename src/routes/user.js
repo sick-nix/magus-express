@@ -26,9 +26,11 @@ router.get('/users', checkAuth, async (req, res) => {
     if(Boolean(excludeCurrentUser)) filter._id = { '$ne': user._id }
     try {
         let users = await User.find(filter).limit(50)
-        console.log(users)
-        users = users.map(u => _.omit(u, ['password']))
-        console.log(users)
+        users = users.map(u => {
+            console.log(u)
+            console.log(_.omit(u, ['password']))
+            return _.omit(u, ['password'])
+        })
         res.status(200).send(users)
     } catch (err) {
         res.status(500).send({ error: err.message })
