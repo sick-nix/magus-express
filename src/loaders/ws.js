@@ -29,9 +29,8 @@ module.exports = function (app) {
 
         ws.on('close', async function () {
             await RoomHelper.setUserInactiveInRooms(ws.currentUser)
-            console.log(Container.instance.getCountByUser(ws.currentUser))
+            // remove connection from array
             Container.instance.removeConnectionByUser(ws.currentUser, ws)
-            console.log(Container.instance.getCountByUser(ws.currentUser))
         })
     })
 }
