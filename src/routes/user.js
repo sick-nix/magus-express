@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
 const { checkAuth } = require('../middleware/auth')
+const _ = require('lodash')
 
 router.get('/', async (req, res) => {
     const { email, username } = req.query
@@ -27,9 +28,8 @@ router.get('/users', checkAuth, async (req, res) => {
         let users = await User.find(filter).limit(50)
         users = users.map(u => {
             console.log(u)
-            const { password, ...otherData } = u
-            console.log(otherData)
-            return otherData
+            console.log(_.omit(u._doc, ['password']))
+            return _.omit(u._doc, ['password'])
         })
         res.status(200).send(users)
     } catch (err) {
